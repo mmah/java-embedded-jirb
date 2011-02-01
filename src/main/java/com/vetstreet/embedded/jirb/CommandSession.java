@@ -52,7 +52,7 @@ public class CommandSession extends HashMap {
 			returnValue = container.runScriptlet("p special_thing");
 				if(commandBuffer.length()>0)
 					commandBuffer = new StringBuilder();
-			return returnValue;
+			return "=> "+returnValue;
 		}catch(ParseFailedException e)
 		{
 			if(!e.getMessage().contains("unexpected"))
