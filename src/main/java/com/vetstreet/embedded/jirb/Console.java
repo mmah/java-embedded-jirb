@@ -41,9 +41,9 @@ import jline.ConsoleReader;
 import jline.Terminal;
 import jline.UnsupportedTerminal;
 //import org.apache.felix.gogo.commands.CommandException;
-//import org.apache.karaf.shell.console.CloseShellException;
-//import org.apache.karaf.shell.console.Completer;
-//import org.apache.karaf.shell.console.completer.CommandsCompleter;
+//import org.apache.jirb.shell.console.CloseShellException;
+//import org.apache.jirb.shell.console.Completer;
+//import org.apache.jirb.shell.console.completer.CommandsCompleter;
 //import org.fusesource.jansi.Ansi;
 //import org.osgi.service.command.CommandProcessor;
 //import org.osgi.service.command.CommandSession;
@@ -54,11 +54,11 @@ import org.slf4j.LoggerFactory;
 public class Console implements Runnable
 {
 
-    public static final String SHELL_INIT_SCRIPT = "karaf.shell.init.script";
+    public static final String SHELL_INIT_SCRIPT = "jirb.shell.init.script";
     public static final String PROMPT = "PROMPT";
     public static final String DEFAULT_PROMPT = "${USER}";
-    public static final String PRINT_STACK_TRACES = "karaf.printStackTraces";
-    public static final String LAST_EXCEPTION = "karaf.lastException";
+    public static final String PRINT_STACK_TRACES = "jirb.printStackTraces";
+    public static final String LAST_EXCEPTION = "jirb.lastException";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Console.class);
 
@@ -98,8 +98,8 @@ public class Console implements Runnable
                                    getClass().getResourceAsStream("keybinding.properties"),
                                    this.terminal);
 
-        File file = new File(System.getProperty("karaf.history",
-                             new File(System.getProperty("user.home"), ".karaf/karaf.history").toString()));
+        File file = new File(System.getProperty("jirb.history",
+                             new File(System.getProperty("user.home"), ".jirb_history").toString()));
         file.getParentFile().mkdirs();
         reader.getHistory().setHistoryFile(file);
         session.put(".jline.history", reader.getHistory());
@@ -255,8 +255,6 @@ public class Console implements Runnable
 
     protected Properties loadBrandingProperties() {
         Properties props = new Properties();
-        loadProps(props, "org/apache/karaf/shell/console/branding.properties");
-        loadProps(props, "org/apache/karaf/branding/branding.properties");
         return props;
     }
 

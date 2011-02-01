@@ -80,7 +80,9 @@ public class CommandSession extends HashMap {
 		if(key.equals(Console.PROMPT))
 		{
 			if(commandBuffer.length() > 0)
+			{				
 				return "jirb* ";
+			}
 			return "jirb> ";			
 		}
 		return super.get(key);
