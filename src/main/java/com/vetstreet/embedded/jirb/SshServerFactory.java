@@ -47,38 +47,19 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 
 	private HashMap<String, Object> beans;
 	
-    private Resource userpasses;    
+    private Resource userpasses; 
+    
+    private int port;
 
     final static Logger log = LoggerFactory.getLogger(SshServerFactory.class);
     
-    public SshServerFactory() throws Exception {
-		SshServer sshd = SshServer.setUpDefaultServer();
-		sshd.setPort(22000);
-		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
-		Factory<Command> factory = null;
-	//	factory = new ProcessShellFactory(new String[] {  "/bin/bash", "-i", "irb" }, EnumSet.of(ProcessShellFactory.TtyOptions.ONlCr));
-		factory = new ShellFactoryImpl();//ShellFactoryImpl();
-		sshd.setShellFactory(	factory	);
-		final Properties userprops = new Properties();
-		if(userpasses != null)
-		{
-			userprops.load(userpasses.getInputStream());
-		}			
-		PasswordAuthenticator authenticator = new PasswordAuthenticator(){
-			public boolean authenticate(String arg0, String arg1,
-					ServerSession arg2) {
-				Object response = userprops.get(arg0);
-				if(response != null)
-					return response.equals(arg1);
-				else if(arg0.equals("jirb") && arg1.equals("jruby15awesom3"))
-					return true;
-				else
-					return false;
-			}			
-		};
-		//authenticator.setDomain("embeddedjirb");
-		sshd.setPasswordAuthenticator(authenticator);		
-        this.server = sshd;
+    public SshServerFactory() throws Exception
+    {
+    	this(22000);
+    }
+    
+    public SshServerFactory(int port) throws Exception {
+    	this.port = port;
     }
 
     public boolean isStart() {
@@ -87,8 +68,7 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 
     public void start() throws Exception {
         if (!start) {
-            try {
-            	
+            try {            	
                 server.start();
                 start = true;
             } catch (Exception e) {
@@ -119,12 +99,47 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 	}
 
 	public void afterPropertiesSet() throws Exception {
+		SshServer sshd = SshServer.setUpDefaultServer();
+		sshd.setPort(port);
+		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
+		Factory<Command> factory = null;
+	//	factory = new ProcessShellFactory(new String[] {  "/bin/bash", "-i", "irb" }, EnumSet.of(ProcessShellFactory.TtyOptions.ONlCr));
+		factory = new ShellFactoryImpl();//ShellFactoryImpl();
+		sshd.setShellFactory(	factory	);
+		final Properties userprops = new Properties();
+		if(userpasses != null)
+		{
+			userprops.load(userpasses.getInputStream());
+		}			
+		PasswordAuthenticator authenticator = new PasswordAuthenticator(){
+			public boolean authenticate(String arg0, String arg1,
+					ServerSession arg2) {
+				Object response = userprops.get(arg0);
+				if(response != null)
+					return response.equals(arg1);
+				else if(arg0.equals("jirb") && arg1.equals("jruby15awesom3"))
+					return true;
+				else
+					return false;
+			}			
+		};
+		//authenticator.setDomain("embeddedjirb");
+		sshd.setPasswordAuthenticator(authenticator);		
+        this.server = sshd;
 		this.start();
 	}
 
 	public void setApplicationContext(ApplicationContext context)
 	throws BeansException {
 		this.context = (AbstractApplicationContext) context;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 }

@@ -31,8 +31,8 @@ public class JirbServerBootstrapperTest {
 		//Main main = new Main();
 		//main.run(new String[]{"-e","require 'irb'\nIRB.start(__FILE__)"});
 		
-		SshServerFactory factory = new SshServerFactory();
-
+		SshServerFactory factory = new SshServerFactory(22222);
+		factory.afterPropertiesSet();
 		factory.start();
 		log.info("STARTED");
 		
