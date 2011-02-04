@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.jruby.embed.LocalContextScope;
@@ -24,38 +25,57 @@ public class CommandSession extends HashMap {
 	
 	List<Character> chardepth = new ArrayList<Character>();
 	
+	Map<String,Object> beans;
+	
+	public boolean needToLoadBeans = true;
+	
 //	Pattern f1 = Pattern.compile("{");
 //	Pattern f2 = Pattern.compile("}");
 //	Pattern f1 = Pattern.compile("{");
 //	Pattern f1 = Pattern.compile("{");
 		
 	public CommandSession(InputStream in, PrintStream printStream,
-			PrintStream printStream2) {
+			PrintStream printStream2, Map<String, Object> beans) {
 		 container = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.PERSISTENT);
 		 container.setInput(in);
 		 this.printStream = printStream;
 		 container.setOutput(printStream);
 		 container.setError(new PrintStream(NullOutputStream.NULL_OUTPUT_STREAM));		
+		 this.beans = beans;		
 	}
 
 	public Object execute(String command) throws Exception {
 		try{
 			Object returnValue = null;
+			beanPrep();
 			commandBuffer.append(command);
 			returnValue = container.runScriptlet(commandBuffer.toString());		
 			container.put("special_thing", returnValue);
 			returnValue = container.runScriptlet("p special_thing");
 			commandBuffer = new StringBuilder();
 			return returnValue;
-		}catch(ParseFailedException e)
+		}catch(Exception e)
 		{
 			if(!e.getMessage().contains("unexpected"))
 			{
+				commandBuffer = new StringBuilder();
 				throw e;
 			}else{
 				commandBuffer.append("\n");
 			}
 			return null;
+		}
+	}
+	
+	public void beanPrep()
+	{
+		if(needToLoadBeans)
+		{
+			for(Map.Entry<String, Object> entry : beans.entrySet())
+	     	 {
+	     		container.put("@"+entry.getKey().trim(),entry.getValue());
+	     	 }
+			needToLoadBeans = false;
 		}
 	}
 	

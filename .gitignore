@@ -1,2 +1,7 @@
 /target
 log4j.log
+hostkey.ser
+/bin
+.classpath
+/.settings
+.project

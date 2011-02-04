@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 import org.apache.commons.io.IOUtils;
 import org.jruby.embed.ScriptingContainer;
@@ -23,7 +24,7 @@ public class CommandSessionTest {
 		containerPipe = new PipedInputStream();
 		PipedOutputStream containerout = new PipedOutputStream();
 		containerPipe.connect(containerout);		
-		commandSession = new CommandSession(null,new PrintStream(containerout),null);
+		commandSession = new CommandSession(null,new PrintStream(containerout),null, new HashMap());
 	}
 
 	@After
@@ -58,6 +59,16 @@ public class CommandSessionTest {
 		commandSession.execute("end");
 		assertTrue(commandSession.getCommandBuffer().length() == 0);		
 		assertEquals(extractString().trim(),"true");
+		try{
+			commandSession.execute("accountDao");
+		}catch(Exception e)
+		{
+			assertTrue(e.getMessage().contains("undefined local variable"));
+		}
+		assertTrue(commandSession.getCommandBuffer().length() == 0);		
+		commandSession.execute("2+2");
+		assertTrue(commandSession.getCommandBuffer().length() == 0);
+		assertTrue(extractString().trim().equals("4"));		
 	}
 	
 	public String extractString() throws Exception {

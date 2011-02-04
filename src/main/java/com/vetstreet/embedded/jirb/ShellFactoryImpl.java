@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -52,8 +53,13 @@ import org.apache.sshd.server.SignalListener;
 public class ShellFactoryImpl implements Factory<Command>
 {
     private CommandProcessor commandProcessor;
+    private final SshServerFactory parentFactory;
 
-    public void setCommandProcessor(CommandProcessor commandProcessor) {
+    public ShellFactoryImpl(SshServerFactory parentFactory) {
+		this.parentFactory = parentFactory;
+	}
+
+	public void setCommandProcessor(CommandProcessor commandProcessor) {
         this.commandProcessor = commandProcessor;
     }
 
@@ -103,7 +109,7 @@ public class ShellFactoryImpl implements Factory<Command>
                                                   public void run() {
                                                       destroy();
                                                   }
-                                              });
+                                              }, parentFactory.mapBeans());
                 final CommandSession session = console.getSession();
                 session.put("APPLICATION", System.getProperty("karaf.name", "r00t"));
                 for (Map.Entry<String,String> e : env.getEnv().entrySet()) {

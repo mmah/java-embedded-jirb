@@ -82,7 +82,7 @@ public class Console implements Runnable
                    PrintStream out,
                    PrintStream err,
                    Terminal term,
-                   Runnable closeCallback) throws Exception
+                   Runnable closeCallback, Map<String,Object> beans) throws Exception
     {
         this.in = in;
         this.out = out;
@@ -90,7 +90,7 @@ public class Console implements Runnable
         this.queue = new ArrayBlockingQueue<Integer>(1024);
         this.terminal = term == null ? new UnsupportedTerminal() : term;
         this.consoleInput = new ConsoleInputStream();
-        this.session = processor.createSession(this.consoleInput, this.out, this.err);
+        this.session = processor.createSession(this.consoleInput, this.out, this.err, beans);
         this.closeCallback = closeCallback;
 
         reader = new ConsoleReader(this.consoleInput,

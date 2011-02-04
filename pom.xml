@@ -4,7 +4,7 @@
 
   <groupId>com.vetstreet</groupId>
   <artifactId>embedded-jirb</artifactId>
-  <version>0.1.1</version>
+  <version>0.2.0</version>
   <packaging>bundle</packaging>
 
   <name>Embedded jIRB</name>
@@ -114,6 +114,20 @@
       		<version>3.2</version>
       		<type>jar</type>
       		<scope>compile</scope>
+      	</dependency>
+      	<dependency>
+      		<groupId>org.springframework</groupId>
+      		<artifactId>spring-test</artifactId>
+      		<version>3.0.3.RELEASE</version>
+      		<type>jar</type>
+      		<scope>test</scope>
+      	</dependency>
+      	<dependency>
+      		<groupId>javax.annotation</groupId>
+      		<artifactId>jsr250-api</artifactId>
+      		<version>1.0</version>
+      		<type>jar</type>
+      		<scope>test</scope>
       	</dependency>
   </dependencies>
       <build>

@@ -19,6 +19,7 @@
 package com.vetstreet.embedded.jirb;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.sshd.SshServer;
@@ -45,7 +46,6 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 
 	private AbstractApplicationContext context;
 
-	private HashMap<String, Object> beans;
 	
     private Resource userpasses; 
     
@@ -78,14 +78,17 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
         }
     }
 
-	private void mapBeans() {
-		beans = new HashMap<String, Object>();
+	public Map<String,Object> mapBeans() throws Exception{
+		Map<String,Object> beans = new HashMap<String, Object>();
+		if(context == null)
+			throw new Exception ("Null context");
 		for(String name : context.getBeanDefinitionNames())
 		{
 			try{
 				beans.put(name, context.getBean(name));
 			}catch(Exception e){}//ignore
 		}
+		return beans;
 	}
     
     public void stop() throws Exception {
@@ -104,7 +107,7 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 		sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider("hostkey.ser"));
 		Factory<Command> factory = null;
 	//	factory = new ProcessShellFactory(new String[] {  "/bin/bash", "-i", "irb" }, EnumSet.of(ProcessShellFactory.TtyOptions.ONlCr));
-		factory = new ShellFactoryImpl();//ShellFactoryImpl();
+		factory = new ShellFactoryImpl(this);//ShellFactoryImpl();
 		sshd.setShellFactory(	factory	);
 		final Properties userprops = new Properties();
 		if(userpasses != null)
@@ -126,7 +129,7 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 		//authenticator.setDomain("embeddedjirb");
 		sshd.setPasswordAuthenticator(authenticator);		
         this.server = sshd;
-		this.start();
+		this.start();        
 	}
 
 	public void setApplicationContext(ApplicationContext context)

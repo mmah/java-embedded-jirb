@@ -71,7 +71,7 @@ public class ShellCommandFactory implements CommandFactory {
 
         public void start(final Environment env) throws IOException {
             try {
-                CommandSession session = commandProcessor.createSession(in, new PrintStream(out), new PrintStream(err));
+                CommandSession session = commandProcessor.createSession(in, new PrintStream(out), new PrintStream(err), null);
                 session.execute(command);
             } catch (Exception e) {
                 throw (IOException) new IOException("Unable to start shell").initCause(e);
