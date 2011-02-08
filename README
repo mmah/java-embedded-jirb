@@ -1,1 +1,24 @@
-Embedded Ruby Console that is aware of Spring lifecycle capabilities. It'll dump all your declared Spring stuff into the Ruby container for easy access at modifying/using your singletons. This console is very good for modifying behavior at runtime, or simply getting easy access to the underlying guts to create adhoc scripts. Primarily used as a console used by applications deployed to an OSGi container (Servicemix). In fact, design is heavily borrowed from the Karaf SSH console. Code that was modified from Apache Karaf retains original Apache License comments and authorship notice where applicable. 
+Embedded Ruby Console that is aware of Spring lifecycle capabilities. 
+It'll dump all your declared Spring stuff into the Ruby container for easy access at modifying/using your singletons. 
+This console is very good for modifying behavior at runtime, or simply getting easy access to the underlying guts to create adhoc scripts. 
+Primarily used as a console used by applications deployed to an OSGi container (Servicemix).
+
+ In fact, design is heavily borrowed from the Karaf SSH console. 
+ Code that was modified from Apache Karaf retains original Apache License comments and authorship notice where applicable.
+
+The authentication module will be expanded, but for now it supports LDAP(and thus ActiveDirectory) if configured. Otherwise, there's a norminal user/pass combo of
+jirb/jruby15awesom3. To configure LDAP, you must pass the server a Map of configuration values via setConfiguration. 
+
+You might create this map in Spring with something like this:
+
+	<util:map id="configuration">
+    		<entry key="url" value="ldaphostname:port"/>
+    		<entry key="domain" value="mydomain"/>
+    		<entry key="domainsuffix" value="com"/>
+    		<entry key="bindUser" value="usernametobindas"/>
+    		<entry key="bindPassword" value="password"/>
+    		<entry key="userOuPath" value="OU=Users"/> <!--The path in the directory to find users -->
+    		<entry key="accountIdentifier" value="sAMAccountName"/> <!-- the key that has the value that matches the username -->
+    		<entry key="groupOuPath" value="OU=Groups"/> <!-- path in the directory to find the groups -->  
+    		<entry key="authorizingRole" value="Admins"/> <!-- Group membership that authorizes access. -->
+    </util:map> 
