@@ -4,7 +4,7 @@
 
   <groupId>com.vetstreet</groupId>
   <artifactId>embedded-jirb</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.0.SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Embedded jIRB</name>
