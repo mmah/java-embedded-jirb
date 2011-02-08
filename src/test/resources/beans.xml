@@ -1,33 +1,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:simple="http://cxf.apache.org/simple" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:cxf="http://cxf.apache.org/core"
-	xmlns:osgi="http://www.springframework.org/schema/osgi"
-	xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
-	xsi:schemaLocation="
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="	
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
-http://cxf.apache.org/simple http://cxf.apache.org/schemas/simple.xsd
-http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
-http://www.springframework.org/schema/jee
-http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
-http://www.springframework.org/schema/tx
-http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-http://www.springframework.org/schema/osgi
-http://www.springframework.org/schema/osgi/spring-osgi.xsd
-http://cxf.apache.org/transports/http/configuration 
-http://cxf.apache.org/schemas/configuration/http-conf.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 ">
 
 
 	<bean id="testBean" class="java.lang.String" >
 		<constructor-arg type="java.lang.String" value="testBean!"/>
 	</bean>
+	
+<!--	<util:map id="configuration">-->
+<!--    		<entry key="url" value=""/>-->
+<!--    		<entry key="domain" value=""/>-->
+<!--    		<entry key="domainsuffix" value=""/>-->
+<!--    		<entry key="bindUser" value=""/>-->
+<!--    		<entry key="bindPassword" value=""/>-->
+<!--    		<entry key="userOuPath" value=""/>-->
+<!--    		<entry key="accountIdentifier" value=""/>-->
+<!--    		<entry key="groupOuPath" value=""/>-->
+<!--    		<entry key="authorizingRole" value=""/>-->
+<!--    </util:map>-->
 
     <bean id="jirbServer" class="com.vetstreet.embedded.jirb.SshServerFactory">
     	<property name="port" value="22222"/>
+<!--    	<property name="configurationMap" ref="configuration"/>-->
     </bean>
+
 
 </beans>

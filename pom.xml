@@ -4,7 +4,7 @@
 
   <groupId>com.vetstreet</groupId>
   <artifactId>embedded-jirb</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <packaging>bundle</packaging>
 
   <name>Embedded jIRB</name>
@@ -128,6 +128,20 @@
       		<version>1.0</version>
       		<type>jar</type>
       		<scope>test</scope>
+      	</dependency>
+      	<dependency>
+      		<groupId>org.springframework.security</groupId>
+      		<artifactId>spring-security-ldap</artifactId>
+      		<version>3.0.3.RELEASE</version>
+      		<type>jar</type>
+      		<scope>compile</scope>
+      	</dependency>
+      	<dependency>
+      		<groupId>org.springframework.security</groupId>
+      		<artifactId>spring-security-taglibs</artifactId>
+      		<version>3.0.5.RELEASE</version>
+      		<type>jar</type>
+      		<scope>compile</scope>
       	</dependency>
   </dependencies>
       <build>

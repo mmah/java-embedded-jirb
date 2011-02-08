@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -46,6 +47,7 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 
 	private AbstractApplicationContext context;
 
+	private Map<String,String> configurationMap;
 	
     private Resource userpasses; 
     
@@ -114,7 +116,10 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 		{
 			userprops.load(userpasses.getInputStream());
 		}			
-		PasswordAuthenticator authenticator = new PasswordAuthenticator(){
+		PasswordAuthenticator authenticator = null;
+		if(configurationMap == null)
+		{
+			authenticator = new PasswordAuthenticator(){
 			public boolean authenticate(String arg0, String arg1,
 					ServerSession arg2) {
 				Object response = userprops.get(arg0);
@@ -124,10 +129,15 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 					return true;
 				else
 					return false;
-			}			
-		};
-		//authenticator.setDomain("embeddedjirb");
-		sshd.setPasswordAuthenticator(authenticator);		
+				}			
+			};			
+		}else{
+			SecurityContextManager manager = new SecurityContextManager(context, configurationMap);
+			authenticator = manager.getPasswordAuthenticator();
+     	}
+		if(authenticator == null)
+			throw new Exception("Null authenticator! Configuration issue.");
+		sshd.setPasswordAuthenticator(authenticator);
         this.server = sshd;
 		this.start();        
 	}
@@ -143,6 +153,14 @@ public class SshServerFactory implements ApplicationContextAware, InitializingBe
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	public Map<String, String> getConfigurationMap() {
+		return configurationMap;
+	}
+
+	public void setConfigurationMap(Map<String, String> configurationMap) {
+		this.configurationMap = configurationMap;
 	}
 
 }
