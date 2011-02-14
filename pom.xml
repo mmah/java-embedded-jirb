@@ -185,14 +185,14 @@
     </build> 
         <distributionManagement>
   <repository>
-    <id>releases</id>
+    <id>vs-releases</id>
     <name>Vetstreet Releases</name>
-    <url>http://ya-vsvcs-01/nexus/content/repositories/releases/</url>
+    <url>${repo.url}</url>
   </repository>
   <snapshotRepository>
-      <id>snapshots</id>
+      <id>vs-releases</id>
       <name>Vetstreet Snapshots</name>
-      <url>http://ya-vsvcs-01/nexus/content/repositories/snapshots/</url>
+      <url>${repo.url}</url>
   </snapshotRepository>  
   </distributionManagement>
 	<reporting>
